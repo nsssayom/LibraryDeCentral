@@ -31,7 +31,7 @@
 
     function query($sql){
       /* Returns MySQL Query */
-      $result = $this->link->query($sql) or die("Database Query Error: " . $this->link->error);
+      $result = $this->link->query($sql) or $result = false;
       return $result;
     }
 

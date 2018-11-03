@@ -27,9 +27,19 @@ class User {
 
       if(password_verify($password, $user['password'])){
          //password matched. Login Successful
-         $data = array();
+        $data = array();
+
+        $tokenReturn = $this->createToken($user['id']);
+        if($tokenReturn === false){
+           $data['status'] = "270";
+           $result = json_encode(array($data));
+           print_r($result);
+           exit();
+         }
+
          $data ['status'] = "100";
-         //$data ['token'] = $this->createToken($pwd_res['id']);
+         $data ['token'] = $tokenReturn;
+
          $response = json_encode(array($data));
          return $response;
        }
@@ -50,6 +60,22 @@ class User {
       }
   }
 
-}
+  private function createToken($userID){
+      $creationTime = time();
+      $expiryTime = strtotime('+7 days', $creationTime);
 
-?>
+      $token_seed = $userID . "#Heil_Hitler#" . $creationTime . "&Fuhrer_is_Great&";
+      $token = hash('sha256', $token_seed);
+
+      $sql = "INSERT INTO login_token (token, uid, creationTime, expiryTime)
+              VALUES ('" . $token . "','" . $userID . "','" . $creationTime . "','"
+              . $expiryTime. "')";
+      if ($this->Database->query($sql) !== false) {
+          echo "New token created";
+          return $token;
+      }
+      else {
+          return false;
+      }
+    }
+}
