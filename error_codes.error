@@ -1,2 +1,5 @@
 DB_Conn_Error               400
 Token_Creation_Failed       270
+Token_Update_Failed         275
+Token_Expired               280
+Invalid_Token               285

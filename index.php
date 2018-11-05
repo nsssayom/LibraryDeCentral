@@ -6,6 +6,7 @@
   $database->connect();
   $user = new User($database);
 
-  echo $user->login("admin@softopian.com","1234");
+  //echo $user->login("admin@softopian.com","1234");
+  echo $user->verifyToken("485e8ab041713413d466ffd99d1d93afdfa4dae5fa2850f839a474f0e8d118cd");
 
 ?>
