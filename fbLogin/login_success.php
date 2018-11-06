@@ -1,3 +1,5 @@
+
+
 <?php
 // Initialize variables
 $app_id = '1152182654930467';
@@ -5,14 +7,13 @@ $secret = '5c7f6b7f69d67ee98159b7fc81fe1477';
 $version = 'v1.1'; // 'v1.1' for example
 
 // Method to send Get request to url
-function doCurl($url)
-{
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    $data = json_decode(curl_exec($ch), true);
-    curl_close($ch);
-    return $data;
+function doCurl($url) {
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $data = json_decode(curl_exec($ch), true);
+  curl_close($ch);
+  return $data;
 }
 
 // Exchange authorization code for access token
@@ -32,6 +33,10 @@ $data = doCurl($me_endpoint_url);
 $phone = isset($data['phone']) ? $data['phone']['number'] : '';
 $email = isset($data['email']) ? $data['email']['address'] : '';
 ?>
+
+
+
+
 
 <head>
   <title>Account Kit PHP App</title>

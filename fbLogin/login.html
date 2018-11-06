@@ -6,10 +6,10 @@
 
 <body>
   <input value="+880" id="country_code" />
-  <input placeholder="phone number" id="phone_number" />
+  <input placeholder="phone number" id="phone_number"/>
   <button onclick="smsLogin();">Login via SMS</button>
   <div>OR</div>
-  <input placeholder="email" id="email" />
+  <input placeholder="email" id="email"/>
   <button onclick="emailLogin();">Login via Email</button>
 
   <script>
@@ -64,7 +64,7 @@
     }
   </script>
 
-  <form id="login_success" method="post" action="/login_success.php">
+  <form id="login_success" method="post" action="login_success.php">
     <input id="csrf" type="hidden" name="csrf" />
     <input id="code" type="hidden" name="code" />
   </form>
@@ -80,5 +80,4 @@
   </script>
 
 </body>
-
 </html>
