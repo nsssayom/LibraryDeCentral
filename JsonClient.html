@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>JSON Test</h1>
+
+<h3>Input 2 integers</h3>
+
+<form action="">
+Num 1: <input type="text" id="txt1"
+onkeyup="setA(this.value)">
+</form>
+
+<form action="" >
+Num 2: <input type="text" id="txt2"
+onkeyup="setB(this.value)">
+</form>
+
+<p>Sum: <span id="sum"></span></p>
+
+<script>
+var a, b;
+function setA(a_arg) {
+	if (a_arg.length > 0){
+    	a = a_arg;
+    }
+    else{
+    	document.getElementById("txt2").innerHTML = "0";
+    }
+}
+
+function setB(b_arg) {
+	if (b_arg.length > 0){
+    	b = b_arg;
+    }
+    else{
+    	document.getElementById("txt2").innerHTML = "0";
+    }
+
+    sum(a, b);
+}
+
+function sum(a, b) {
+  var xhttp;
+  xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("sum").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "http://27.147.181.30/LibraryDeCentral/json_test.php?a="+a+"&b="+b, true);
+  xhttp.send();
+}
+</script>
+
+</body>
+</html>
