@@ -1,5 +1,5 @@
 <?php
-include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/validators.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/validator.php');
 class User
 {
     private $Database;
@@ -22,8 +22,8 @@ class User
         $userLogin = $this->Database->escape($userLogin);
         $password = $this->Database->escape($password);
         //$password = $this->processPassword($password);
-
-        $result = $this->Database->getArray("SELECT * FROM `user` WHERE `username` = '".$userLogin."' OR `email` = '" . $userLogin. "'");
+        $sql = "SELECT * FROM `user` WHERE `username` = '".$userLogin."' OR `email` = '" . $userLogin. "'";
+        $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
             //user found
             $user = $result[0];
@@ -99,8 +99,15 @@ class User
         }
     }
 
-    public function verifyToken($token)
+    private function verifyToken($token)
     {
+        /*
+        return
+            true  Okay
+            0     Token_Expired
+            -1    Invalid_Token
+        */
+
         $sql = "SELECT id, expiryTime FROM `login_token` WHERE token = '" . $token . "';";
         $now = time();
         $result = $this->Database->getArray($sql);
@@ -134,16 +141,93 @@ class User
         }
     }
 
-    public function isUsernameAvailable($username){
-
+    public function isUserNameAvailable($username)
+    {
+        $username = $this->Database->escape($username);
+        $sql = "SELECT id, username, email FROM `user` WHERE username = '" . $username . "'";
+        $result = $this->Database->getArray($sql);
+        if (isset($result[0])) {
+            $data = array();
+            $data ['status'] = "301";
+            $response = json_encode(array($data));
+            return $response;
+        }
+        return true;
     }
 
-    public function register($username, $password, $name, $phone, $email, $dob){
-      $username = mysqli_real_escape_string($this->connection, $username);
-      $name = mysqli_real_escape_string($this->connection, $name);
-      $phone = mysqli_real_escape_string($this->connection, $phone);
-      $email = mysqli_real_escape_string($this->connection, $email);
-      $dob = mysqli_real_escape_string($this->connection, $dob);
+    public function isEmailAvailable($email)
+    {
+        $email = $this->Database->escape($email);
+
+        if (!validateEmail($email)){
+          $data = array();
+          $data ['status'] = "302";
+          $response = json_encode(array($data));
+          return $response;
+        }
+
+        $sql = "SELECT id, username, email FROM `user` WHERE email = '" . $email . "'";
+        $result = $this->Database->getArray($sql);
+        if (isset($result[0])) {
+          $data = array();
+          $data ['status'] = "303";
+          $response = json_encode(array($data));
+          return $response;
+        }
+        return true;
+    }
+
+    public function isPhoneAvailable($phone)
+    {
+        $phone = $this->Database->escape($phone);
+        if (!validatePhone($phone)){
+          $data = array();
+          $data ['status'] = "304";
+          $response = json_encode(array($data));
+          return $response;
+        }
+        $sql = "SELECT id, username, phone FROM `user` WHERE phone = '" . $phone . "'";
+        $result = $this->Database->getArray($sql);
+        if (isset($result[0])) {
+          $data = array();
+          $data ['status'] = "305";
+          $response = json_encode(array($data));
+          return $response;
+        }
+        return true;
+    }
+
+    //public function register($username, $password, $name, $phone, $email, $dob)
+public function register($username, $password, $phone, $email)
+    {
+        $username = $this->Database->escape($username);
+        //$name = $this->Database->escape($name);
+        $phone = $this->Database->escape($phone);
+        $email = $this->Database->escape($email);
+        //$dob = $this->Database->escape($dob);
+
+        $username_availability = $this->isUserNameAvailable($username);
+        $email_availability = $this->isEmailAvailable($email);
+        $phone_availability = $this->isPhoneAvailable($phone);
+
+        if (isJson($username_availability) || isJson($email_availability) || isJson($phone_availability)){
+            $error = array();
+            $response = NULL;
+            if (isJson($username_availability)){
+              $error = array_merge($error,json_decode($username_availability, true));
+            }
+            if (isJson($email_availability)){
+              $error = array_merge($error,json_decode($email_availability, true));
+            }
+            if (isJson($phone_availability)){
+              $error = array_merge($error,json_decode($phone_availability, true));
+            }
+            $response = json_encode(array($error));
+            print_r($response);
+            //print_r(json_decode($response));
+            return $response;
+        }
+
 
     }
 }

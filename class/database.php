@@ -42,15 +42,15 @@
 
     function getArray($sql){
       $mq = $this->query($sql);
-      if($mq->num_rows > 0){
-        $result = array();
-        while($mfa = $mq->fetch_array(MYSQLI_ASSOC)){
-          $result[] = $mfa;
-        }
-        return $result;
-      }else{
+      if (!$mq){
         return false;
       }
+
+      $result = array();
+      while($mfa = $mq->fetch_array(MYSQLI_ASSOC)){
+        $result[] = $mfa;
+      }
+      return $result;
     }
 
     function getLink(){
