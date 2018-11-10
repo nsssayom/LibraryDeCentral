@@ -35,9 +35,6 @@ $email = isset($data['email']) ? $data['email']['address'] : '';
 ?>
 
 
-
-
-
 <head>
   <title>Account Kit PHP App</title>
 </head>
