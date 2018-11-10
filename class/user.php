@@ -9,7 +9,7 @@ class User
         $this->Database = $DatabaseLink;
     }
 
-    public function processPassword($password)
+    private function processPassword($password)
     {
         $options = [
     'cost' => 8,
@@ -198,14 +198,17 @@ class User
     }
 
     //public function register($username, $password, $name, $phone, $email, $dob)
-    public function register($username, $password, $phone, $email, $name, $dob)
+    public function register($username, $password, $code, $email, $name, $dob)
     {
         $username = $this->Database->escape($username);
         $name = $this->Database->escape($name);
-        $phone = $this->Database->escape($phone);
+        $code = $this->Database->escape($code);
         $email = $this->Database->escape($email);
         $dob = $this->Database->escape($dob);
         $password = $this->Database->escape($password);
+
+        //remove the following line
+        $phone = $code;
 
         $username_availability = $this->isUserNameAvailable($username);
         $email_availability = $this->isEmailAvailable($email);
@@ -231,6 +234,30 @@ class User
 
 
 
+        //this handels the verification using account kit
+        /*
+        $phoneResponse = verifyPhoneEmail($code, "phone");
+        if (!isJson($phoneResponse)) {
+            $phone = $phoneResponse;
+        } else {
+            return $phoneResponse;
+        }
+        */
 
+        if (!validateDate($dob, 'YYYY-MM-DD')){
+          $data = array();
+          $data ['status'] = "312";
+          $response = json_encode(array($data));
+          return $response;
+        }
+
+        $processedPassword = $this->processPassword($password);
+
+        $sql = "INSERT INTO user(username, password, name, phone, dob, email)
+                VALUES ('" . $username . "','" . $processedPassword . "','" . $name ."','" . $phone .
+                "','" . $dob . "','" . $email ."')";
+        if ($this->Database->query($sql)){
+          return $this->login($email, $password);
+        }
     }
 }
