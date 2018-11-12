@@ -227,7 +227,7 @@ class User
                 $error = array_merge($error, json_decode($phone_availability, true));
             }
             $response = json_encode($error);
-            print_r($response);
+            //print_r($response);
             //print_r(json_decode($response));
             return $response;
         }

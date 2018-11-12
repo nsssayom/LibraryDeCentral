@@ -1,6 +1,7 @@
 <?php
   include_once($_SERVER['DOCUMENT_ROOT'].'/LibraryDeCentral/class/database.php');
   include_once($_SERVER['DOCUMENT_ROOT'].'/LibraryDeCentral/class/user.php');
+  include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/validator.php');
 
   $dbConfigStr = file_get_contents($_SERVER['DOCUMENT_ROOT'].'/LibraryDeCentral/config/database.json');
   $dbConfig = json_decode($dbConfigStr, true);
@@ -15,8 +16,8 @@
   //echo (int) ($user->isUserNameAvailable("nsssayom"));
   //echo (int) ($user->isUserNameAvailable("admin"));
 
-  //echo (int) ($user->isEmailAvailable("admin@softopian.com"));
-  //echo (int) ($user->isEmailAvailable("nsssayom@softopian.com"));
+  //echo  ($user->isEmailAvailable("admin@softopian.com"));
+  //echo  ($user->isEmailAvailable("nsssayom@softopian.com"));
 
   //echo (int) ($user->isPhoneAvailable("+8801717018376"));
   //echo (int) ($user->isPhoneAvailable("8801521308829"));

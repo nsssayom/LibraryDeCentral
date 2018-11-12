@@ -1,3 +1,4 @@
+Okay                        100
 DB_Conn_Error               400
 Token_Creation_Failed       270
 Token_Update_Failed         275
@@ -10,4 +11,4 @@ Invalid_Phone_Number        304
 Phone_Number_Not_Available  305
 Email_Cannot_be_Verified    310
 Phone_Cannot_be_Verified    311
-Invalid_DateOfBirth         312  
+Invalid_DateOfBirth         312
