@@ -75,4 +75,66 @@ class book
             }
         }
     }
+
+    private function setPublisher($string)
+    {
+        $sql = "SELECT id FROM genre WHERE name='$string'";
+        $result = $this->Database->getArray($sql);
+        if (isset($result[0])) {
+            //genre found and id returned
+            return $result['id'];
+        } else {
+            //genre not found
+            $sql = "INSERT INTO publisher(name) VALUES('$string')";
+            if ($this->Database->query($sql)) {
+                $sql = "SELECT LAST_INSERT_ID()";
+                $result = $this->Database->query($sql);
+                if (isset($result[0])) {
+                    return $result['id'];
+                } else {
+                    $data = array();
+                    $data['status'] = "400";
+                    $response = json_encode(array($data));
+                    return $response;
+                }
+            } else {
+                $data = array();
+                $data['status'] = "400";
+                $response = json_encode(array($data));
+                return $response;
+            }
+        }
+    }
+
+    //eki jinish vai, koira falao...
+
+    private function setAuthor($string)
+    {
+        $sql = "SELECT id FROM author WHERE name='$string'";
+        $result = $this->Database->getArray($sql);
+        if (isset($result[0])) {
+            //genre found and id returned
+            return $result['id'];
+        } else {
+            //genre not found
+            $sql = "INSERT INTO author(name) VALUES('$string')";
+            if ($this->Database->query($sql)) {
+                $sql = "SELECT LAST_INSERT_ID()";
+                $result = $this->Database->query($sql);
+                if (isset($result[0])) {
+                    return $result['id'];
+                } else {
+                    $data = array();
+                    $data['status'] = "400";
+                    $response = json_encode(array($data));
+                    return $response;
+                }
+            } else {
+                $data = array();
+                $data['status'] = "400";
+                $response = json_encode(array($data));
+                return $response;
+            }
+        }
+    }
 }
