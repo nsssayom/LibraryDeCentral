@@ -144,7 +144,6 @@ class book
     }
 
     //eki jinish vai, koira falao...
-
     //get author name, and return id upon availability, or create new entry
 
     public function removeBook($id)
@@ -170,9 +169,9 @@ class book
         return response_ok();
     }
 
-    public function removePubliser($bookID, $publiserID)
+    public function removePublisher($bookID, $publisherID)
     {
-        $sql = "INSERT INTO book_publiser(isDeleted) VALUES(1) WHERE book_id='$bookID' AND publisher_id='$publiserID'";
+        $sql = "INSERT INTO book_publisher(isDeleted) VALUES(1) WHERE book_id='$bookID' AND publisher_id='$publisherID'";
         $this->Database->query($sql);
         return response_ok();
     }

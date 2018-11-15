@@ -70,3 +70,4 @@ function ($mydate, $format = 'DD-MM-YYYY')
     }
     return false;
 }
+?>

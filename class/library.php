@@ -26,18 +26,10 @@ class library
     //-ConfirmDelivery()
     //-DenyDelivery()
 
-    //I propose
-    //-editBook()
-    //-and for this editBook() book.php needs the edit functions based on sql "UPDATE" command
 
-
-    //params needed to be defined
     public function AddBook($params){
-            //we don't need to validate coz set book info does that
             $result=$this->Book->setBookInfo($params);
-            //this code is minimal because setBookInfo has taken care of all loose ends
-            //$result carries whatever status is found
-            //matching this result will be sufficient in front end
+
             return $result;
     }
     public function DeleteBook($id){

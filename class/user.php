@@ -1,5 +1,6 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/validator.php');
+
 class User
 {
     private $Database;
@@ -11,56 +12,38 @@ class User
 
     private function processPassword($password)
     {
-        $options = [
-    'cost' => 8,
-    ];
+        $options = ['cost' => 8,];
         return password_hash($password, PASSWORD_BCRYPT, $options);
     }
 
     public function login($userLogin, $password)
     {
-        $userLogin = $this->Database->escape($userLogin);
-        $password = $this->Database->escape($password);
         //$password = $this->processPassword($password);
-        $sql = "SELECT * FROM `user` WHERE `username` = '".$userLogin."' OR `email` = '" . $userLogin. "'";
+        $sql = "SELECT * FROM user WHERE username =  '$userLogin' OR email = '$userLogin'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
             //user found
             $user = $result[0];
-
             if (password_verify($password, $user['password'])) {
-                //password matched. Login Successful
-                $data = array();
-
+                //password matched. Creating Token
                 $tokenReturn = $this->createToken($user['id']);
                 if ($tokenReturn === false) {
-                    $data['status'] = "270";
-                    $result = json_encode(array($data));
-                    print_r($result);
-                    exit();
+                    //Token Creation failed
+                    return response_token_creation_failed();
                 }
-
-                $data ['status'] = "100";
-                $data ['token'] = $tokenReturn;
-
-                $response = json_encode(array($data));
-                return $response;
+                //Token Created. Returning Token
+                return response_token($tokenReturn);
             } else {
                 //password didn't matched
-                $data = array();
-                $data ['status'] = "258";
-                $response = json_encode(array($data));
-                return $response;
+                return response_wrong_password();
             }
         } else {
             //user not found
-            $data = array();
-            $data ['status'] = "255";
-            $response = json_encode(array($data));
-            return $response;
+            return response_invalid_user();
         }
     }
 
+    //No JSON Response
     private function createToken($userID)
     {
         $creationTime = time();
@@ -69,9 +52,7 @@ class User
         $token_seed = $userID . "#Heil_Hitler#" . $creationTime . "&Fuhrer_is_Great&";
         $token = hash('sha256', $token_seed);
 
-        $sql = "INSERT INTO login_token (token, uid, creationTime, expiryTime)
-              VALUES ('" . $token . "','" . $userID . "','" . $creationTime . "','"
-              . $expiryTime. "')";
+        $sql = "INSERT INTO login_token (token, uid, creationTime, expiryTime) VALUES ('$token','$userID','$creationTime','$expiryTime')";
         if ($this->Database->query($sql) !== false) {
             return $token;
         } else {
@@ -83,32 +64,17 @@ class User
     {
         $now = time();
         $expiryTime = strtotime('+7 days', $now);
-        $sql = "UPDATE login_token SET expiryTime = '" . $expiryTime . "' WHERE token = '" . $token . "'";
+        $sql = "UPDATE login_token SET expiryTime = '$expiryTime' WHERE token = '$token'";
         if ($this->Database->query($sql) !== false) {
             return true;
         } else {
-            return false;
-            /*
-            $data = array();
-            $data['status'] = "275";
-            $result = json_encode(array($data));
-            print_r($result);
-            $this->connection->close();
-            exit();
-            */
+            return response_token_update_failed();
         }
     }
 
-    private function verifyToken($token)
+    public function verifyToken($token)
     {
-        /*
-        return
-            true  Okay
-            0     Token_Expired
-            -1    Invalid_Token
-        */
-
-        $sql = "SELECT id, expiryTime FROM `login_token` WHERE token = '" . $token . "';";
+        $sql = "SELECT id, expiryTime FROM login_token WHERE token = '$token';";
         $now = time();
         $result = $this->Database->getArray($sql);
 
@@ -117,33 +83,21 @@ class User
             //token found
             if ($result['expiryTime'] > $now) {
                 //token ok
+                updateToken($token);
                 return true;
-                exit();
             } else {
                 return 0;
                 //token expired
-                /*$data = array();
-                $data['status'] = "280";
-                $result = json_encode(array($data));
-                print_r($result);
-                exit();
-                */
+                return response_token_expired();
             }
         } else {
-            return -1;
-            //invalid token
-            /*$data = array();
-            $data['status'] = "285";
-            $result = json_encode(array($data));
-            print_r($result);
-            exit();
-            */
+            //token not found
+            return response_invalid_token();
         }
     }
 
     public function isUserNameAvailable($username)
     {
-        $username = $this->Database->escape($username);
         $sql = "SELECT id, username, email FROM `user` WHERE username = '" . $username . "'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
@@ -157,7 +111,6 @@ class User
 
     public function isEmailAvailable($email)
     {
-        $email = $this->Database->escape($email);
 
         if (!validateEmail($email)) {
             $data = array();
@@ -179,7 +132,6 @@ class User
 
     public function isPhoneAvailable($phone)
     {
-        $phone = $this->Database->escape($phone);
         if (!validatePhone($phone)) {
             $data = array();
             $data ['status'] = "304";
@@ -200,13 +152,6 @@ class User
     //public function register($username, $password, $name, $phone, $email, $dob)
     public function register($username, $password, $code, $email, $name, $dob)
     {
-        $username = $this->Database->escape($username);
-        $name = $this->Database->escape($name);
-        $code = $this->Database->escape($code);
-        $email = $this->Database->escape($email);
-        $dob = $this->Database->escape($dob);
-        $password = $this->Database->escape($password);
-
         //remove the following line
         $phone = $code;
 
@@ -233,7 +178,6 @@ class User
         }
 
 
-
         //this handels the verification using account kit
         /*
         $phoneResponse = verifyPhoneEmail($code, "phone");
@@ -244,20 +188,20 @@ class User
         }
         */
 
-        if (!validateDate($dob, 'YYYY-MM-DD')){
-          $data = array();
-          $data ['status'] = "312";
-          $response = json_encode(array($data));
-          return $response;
+        if (!validateDate($dob, 'YYYY-MM-DD')) {
+            $data = array();
+            $data ['status'] = "312";
+            $response = json_encode(array($data));
+            return $response;
         }
 
         $processedPassword = $this->processPassword($password);
 
         $sql = "INSERT INTO user(username, password, name, phone, dob, email)
-                VALUES ('" . $username . "','" . $processedPassword . "','" . $name ."','" . $phone .
-                "','" . $dob . "','" . $email ."')";
-        if ($this->Database->query($sql)){
-          return $this->login($email, $password);
+                VALUES ('" . $username . "','" . $processedPassword . "','" . $name . "','" . $phone .
+            "','" . $dob . "','" . $email . "')";
+        if ($this->Database->query($sql)) {
+            return $this->login($email, $password);
         }
     }
 }
