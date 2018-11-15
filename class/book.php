@@ -1,6 +1,7 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/validator.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/response.php');
+include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/class/database.php');
 
 class book
 {
@@ -29,103 +30,67 @@ class book
         } else return; //status code?
     }
 
-    //these is a problem with this function, it doesn't return anything upon success, trying to fix it
-    //addition on line 102
-    public function setBookInfo($param)
+
+    public function setBookInfo($title, $authors, $genre = null, $publisher = null, $tags = null)
     {
-        $params = array();
-        foreach ($param as $key => $value) {
-            //is arry check needed
-            $params[$key] = $this->Database->escape($value);
+        $bookID = $this->initBook($title);
+
+        //insert author
+        foreach ($authors as $author) {
+            $this->setAuthor($bookID, $this->getAuthor($author), $author['type']);
         }
 
+        //insert genre
+        if (!is_null($genre)) {
+            $this->setGenre($bookID, $this->getGenre($genre));
+        }
 
-        if (isset($params['title']) && isset($params['author[0]'])) {
-            // fist push the name into database;
-            //then get the id of the corresponding row for other data's to be pushed
-            $bookID = $this->initBook($params['title']);
-            //if initBook() was properly executed
-            if (!isJson($bookID)) {
-
-                // author will be an array();
-                // type will be an array() by default initialised to zero
-                // index based entry
-
-                //insert author
-                $i=0; //for type loop
-                foreach($params['author'] as $author) {
-                    //first get author id
-                    //escape will be here
-                    $author=$this->Database->escape($author);
-
-                   $authorID = $this->getAuthor($author);
-
-                    if (!isJson($authorID)) {
-                        //now set relation author_book
-                        $type = $params['type[i]'];
-
-                        $result = $this->setAuthor($bookID, $authorID, $type);
-
-                        if (isJson(($result))) {
-                            return response_database_error();
-                        }
-                    }
-                }
-
-                //insert genre
-                if (isset($params['genre'])) {
-                    $genre = $this->getGenre(params['genre']);
-                    if (!isJson($genre)) {
-                        $result = $this->setGenre($bookID, $genre);
-                        if (isJson($result)) {
-                            return response_database_error();
-                        }
-                    }
-                }
-
-                if (isset($tag['tag'])) {
-                    for ($i = 0; $i < $params['tag'] . size(); $i++) {
-                        //first get author id
-
-                        $tagID = $this->getTag($params['tag[i]']);
-
-                        if (!isJson($tagID)) {
-                            //now set relation book_tag
-                            $result = $this->setAuthor($bookID, $tagID);
-
-                            if (isJson(($result))) {
-                                return response_database_error();
-                            }
-                        }
-                    }
-                }
-                //new response on success
-                return response_ok();
-            } else {
-                return response_database_error();
+        //insert tags
+        if (!is_null($tags)) {
+            foreach ($tags as $tag) {
+                $this->setTag($bookID, $this->getTag($tag));
             }
+        }
 
-        } else return response_invalid_request();
+        if (!is_null($publisher)) {
+            $this->setPublisher($bookID, $this->getPublisher($publisher));
+        }
+
+        //new response on success
+        return response_ok();
     }
 
+    //Edit book title [Only editable entity]
+    public function editBookTitle($bookId, $newTitle)
+    {
+        $newTitle = $this->Database->escape($newTitle);
+        $bookId = $this->Database->escape($bookId);
+
+        if ($this->bookExists($bookId)) {
+            $sql = "UPDATE book SET title = '$newTitle' WHERE id = '$bookId'";
+            $this->Database->query($sql);
+            return response_ok();
+        } else {
+            return response_invalid_request();
+        }
+    }
+
+    private function bookExists($bookId)
+    {
+        $bookId = $this->Database->escape($bookId);
+        $sql = "SELECT * FROM book WHERE id = '$bookId'";
+        $this->Database->getArray($sql);
+        return true;
+    }
 
     //function for getting the id for setBookInfo()
     public function initBook($name)
     {
-
         $sql = "INSERT INTO book(name) VALUES('$name')";
-
-        $result = $this->Database->query($sql);
-
-        if ($result) {
-            $sql = "SELECT LAST_INSERT_ID()";
-            $result = $this->Database->query($sql);
-            if (isset($result[0])) {
-                return $result['id'];
-            } else {
-                return response_database_error();
-            }
-        } else return response_database_error();
+        $this->Database->query($sql);
+        $sql = "SELECT LAST_INSERT_ID()";
+        $result = $this->Database->getArray($sql);
+        return $result['id'];
     }
 
     private function getAuthor($string)
@@ -136,19 +101,12 @@ class book
             //author found and id returned
             return $result['id'];
         } else {
-            //genre not found
+            //author not found
             $sql = "INSERT INTO author(name) VALUES('$string')";
-            if ($this->Database->query($sql)) {
-                $sql = "SELECT LAST_INSERT_ID()";
-                $result = $this->Database->query($sql);
-                if (isset($result[0])) {
-                    return $result['id'];
-                } else {
-                    return response_database_error();
-                }
-            } else {
-                return response_database_error();
-            }
+            $this->Database->query($sql);
+            $sql = "SELECT LAST_INSERT_ID()";
+            $result = $this->Database->getArray($sql);
+            return $result['id'];
         }
     }
 
@@ -157,11 +115,9 @@ class book
     private function setAuthor($bookID, $authorID, $authorType = 0)
     {
         $sql = "INSERT INTO author_book(book_id, author_id, author_type) VALUES = '$bookID', '$authorID', '$authorType'";
-        if ($this->Database->query($sql)) {
-            return response_ok();
-        } else {
-            return response_database_error();
-        }
+        $this->Database->query($sql);
+        return response_ok();
+
     }
 
     private function getGenre($string)
@@ -169,34 +125,22 @@ class book
         $sql = "SELECT id FROM genre WHERE name='$string'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
-            //genre found and id returned
             return $result['id'];
         } else {
-            //genre not found
             $sql = "INSERT INTO genre(name) VALUES('$string')";
-            if ($this->Database->query($sql)) {
-                $sql = "SELECT LAST_INSERT_ID()";
-                $result = $this->Database->query($sql);
-                if (isset($result[0])) {
-                    return $result['id'];
-                } else {
-                    return response_database_error();
-                }
-            } else {
+            $this->Database->query($sql);
 
-                return response_database_error();
-            }
+            $sql = "SELECT LAST_INSERT_ID()";
+            $result = $this->Database->query($sql);
+            return $result['id'];
         }
     }
 
     private function setGenre($bookID, $genreID)
     {
         $sql = "INSERT INTO book_genre(book_id, genre_id) VALUES = '$bookID', '$genreID'";
-        if ($this->Database->query($sql)) {
-            return response_ok();
-        } else {
-            return response_database_error();
-        }
+        $this->Database->query($sql);
+        return response_ok();
     }
 
     //eki jinish vai, koira falao...
@@ -205,12 +149,9 @@ class book
 
     public function removeBook($id)
     {
-        $sql = "INSESRT INTO book(isDeleted) VALUES(1) WHERE id='$id";
-        if ($this->Database->query($sql)) {
-            return response_ok();
-        } else {
-            return response_database_error();
-        }
+        $sql = "INSERT INTO book(isDeleted) VALUES(1) WHERE id='$id'";
+        $this->Database->query($sql);
+        return response_ok();
     }
 
     //works on author_book relationship table
@@ -218,31 +159,22 @@ class book
     public function removeAuthor($bookID, $authorID)
     {
         $sql = "INSERT INTO author_book(isDeleted) VALUES(1) WHERE book_id='$bookID' AND author_id='$authorID'";
-        if ($this->Database->query($sql)) {
-            return response_ok();
-        } else {
-            return response_database_error()();
-        }
+        $this->Database->query($sql);
+        return response_ok();
     }
 
     public function removeGenre($bookID, $genreID)
     {
         $sql = "INSERT INTO book_genre(isDeleted) VALUES(1) WHERE book_id='$bookID' AND genre_id='$genreID'";
-        if ($this->Database->query($sql)) {
-            return response_ok();
-        } else {
-            return response_database_error()();
-        }
+        $this->Database->query($sql);
+        return response_ok();
     }
 
     public function removePubliser($bookID, $publiserID)
     {
         $sql = "INSERT INTO book_publiser(isDeleted) VALUES(1) WHERE book_id='$bookID' AND publisher_id='$publiserID'";
-        if ($this->Database->query($sql)) {
-            return response_ok();
-        } else {
-            return response_database_error()();
-        }
+        $this->Database->query($sql);
+        return response_ok();
     }
 
     //mobin zaman signing in
@@ -250,11 +182,8 @@ class book
     public function removeTag($bookID, $tagID)
     {
         $sql = "INSERT INTO book_tag(isDeleted) VALUES(1) WHERE book_id='$bookID' AND tag_id='$tagID'";
-        if ($this->Database->query($sql)) {
-            return response_ok();
-        } else {
-            return response_database_error()();
-        }
+        $this->Database->query($sql);
+        return response_ok();
     }
 
     private function getPublisher($string)
@@ -262,33 +191,22 @@ class book
         $sql = "SELECT id FROM publisher WHERE name='$string'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
-            //genre found and id returned
             return $result['id'];
         } else {
-            //genre not found
             $sql = "INSERT INTO publisher(name) VALUES('$string')";
-            if ($this->Database->query($sql)) {
-                $sql = "SELECT LAST_INSERT_ID()";
-                $result = $this->Database->query($sql);
-                if (isset($result[0])) {
-                    return $result['id'];
-                } else {
-                    return response_database_error();
-                }
-            } else {
-                return response_database_error();
-            }
+            $this->Database->query($sql);
+
+            $sql = "SELECT LAST_INSERT_ID()";
+            $result = $this->Database->query($sql);
+            return $result['id'];
         }
     }
 
     private function setPublisher($bookID, $publisherID)
     {
         $sql = "INSERT INTO book_publisher(book_id, publisher_id) VALUES = '$bookID', '$publisherID'";
-        if ($this->Database->query($sql)) {
-            return response_ok();
-        } else {
-            return response_database_error();
-        }
+        $this->Database->query($sql);
+        return response_ok();
     }
 
     private function getTag($string)
@@ -301,28 +219,19 @@ class book
         } else {
             //genre not found
             $sql = "INSERT INTO tag(name) VALUES('$string')";
-            if ($this->Database->query($sql)) {
-                $sql = "SELECT LAST_INSERT_ID()";
-                $result = $this->Database->query($sql);
-                if (isset($result[0])) {
-                    return $result['id'];
-                } else {
-                    return response_database_error();
-                }
-            } else {
-                return response_database_error();
-            }
+            $this->Database->query($sql);
+
+            $sql = "SELECT LAST_INSERT_ID()";
+            $result = $this->Database->query($sql);
+            return $result['id'];
         }
     }
 
     private function setTag($bookID, $tagID)
     {
         $sql = "INSERT INTO book_tag(book_id, tag_id) VALUES = '$bookID', '$tagID'";
-        if ($this->Database->query($sql)) {
+        $this->Database->query($sql);
             return response_ok();
-        } else {
-            return response_database_error();
-        }
     }
 
 }
