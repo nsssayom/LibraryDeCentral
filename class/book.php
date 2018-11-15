@@ -29,7 +29,8 @@ class book
         } else return; //status code?
     }
 
-
+    //these is a problem with this function, it doesn't return anything upon success, trying to fix it
+    //addition on line 102
     public function setBookInfo($param)
     {
         $params = array();
@@ -98,6 +99,8 @@ class book
                         }
                     }
                 }
+                //new response on success
+                return response_ok();
             } else {
                 return response_database_error();
             }
