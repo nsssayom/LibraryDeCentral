@@ -29,17 +29,17 @@ class User
                 $tokenReturn = $this->createToken($user['id']);
                 if ($tokenReturn === false) {
                     //Token Creation failed
-                    return response_token_creation_failed();
+                     response_token_creation_failed();
                 }
                 //Token Created. Returning Token
-                return response_token($tokenReturn);
+                 response_token($tokenReturn);
             } else {
                 //password didn't matched
-                return response_wrong_password();
+                 response_wrong_password();
             }
         } else {
             //user not found
-            return response_invalid_user();
+             response_invalid_user();
         }
     }
 
@@ -68,7 +68,7 @@ class User
         if ($this->Database->query($sql) !== false) {
             return true;
         } else {
-            return response_token_update_failed();
+             response_token_update_failed();
         }
     }
 
@@ -86,13 +86,12 @@ class User
                 updateToken($token);
                 return true;
             } else {
-                return 0;
                 //token expired
-                return response_token_expired();
+                response_token_expired();
             }
         } else {
             //token not found
-            return response_invalid_token();
+            response_invalid_token();
         }
     }
 
@@ -101,10 +100,7 @@ class User
         $sql = "SELECT id, username, email FROM `user` WHERE username = '" . $username . "'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
-            $data = array();
-            $data ['status'] = "301";
-            $response = json_encode(array($data));
-            return $response;
+            response_username_not_available();
         }
         return true;
     }
@@ -113,19 +109,13 @@ class User
     {
 
         if (!validateEmail($email)) {
-            $data = array();
-            $data ['status'] = "302";
-            $response = json_encode(array($data));
-            return $response;
+            response_invalid_email();
         }
 
         $sql = "SELECT id, username, email FROM `user` WHERE email = '" . $email . "'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
-            $data = array();
-            $data ['status'] = "303";
-            $response = json_encode(array($data));
-            return $response;
+            response_email_not_available();
         }
         return true;
     }
@@ -133,18 +123,12 @@ class User
     public function isPhoneAvailable($phone)
     {
         if (!validatePhone($phone)) {
-            $data = array();
-            $data ['status'] = "304";
-            $response = json_encode(array($data));
-            return $response;
+            response_invalid_phone_number();
         }
         $sql = "SELECT id, username, phone FROM `user` WHERE phone = '" . $phone . "'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
-            $data = array();
-            $data ['status'] = "305";
-            $response = json_encode(array($data));
-            return $response;
+            response_phone_number_not_available();
         }
         return true;
     }
@@ -181,18 +165,16 @@ class User
         //this handels the verification using account kit
         /*
         $phoneResponse = verifyPhoneEmail($code, "phone");
-        if (!isJson($phoneResponse)) {
+        if (!isJson($phoneResponse)) {:w
+        1
             $phone = $phoneResponse;
         } else {
             return $phoneResponse;
         }
         */
-
+        //validateDate needs to be defined;
         if (!validateDate($dob, 'YYYY-MM-DD')) {
-            $data = array();
-            $data ['status'] = "312";
-            $response = json_encode(array($data));
-            return $response;
+            response_invalid_dateofbirth();
         }
 
         $processedPassword = $this->processPassword($password);
