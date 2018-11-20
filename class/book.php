@@ -57,7 +57,7 @@ class book
         }
 
         //new response on success
-        return response_ok();
+         response_ok();
     }
 
     //Edit book title [Only editable entity]
@@ -69,9 +69,9 @@ class book
         if ($this->bookExists($bookId)) {
             $sql = "UPDATE book SET title = '$newTitle' WHERE id = '$bookId'";
             $this->Database->query($sql);
-            return response_ok();
+            response_ok();
         } else {
-            return response_invalid_request();
+            response_invalid_request();
         }
     }
 
@@ -116,7 +116,7 @@ class book
     {
         $sql = "INSERT INTO author_book(book_id, author_id, author_type) VALUES = '$bookID', '$authorID', '$authorType'";
         $this->Database->query($sql);
-        return response_ok();
+        response_ok();
 
     }
 
@@ -140,7 +140,7 @@ class book
     {
         $sql = "INSERT INTO book_genre(book_id, genre_id) VALUES = '$bookID', '$genreID'";
         $this->Database->query($sql);
-        return response_ok();
+        response_ok();
     }
 
     //eki jinish vai, koira falao...
