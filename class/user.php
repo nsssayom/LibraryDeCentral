@@ -97,7 +97,7 @@ class User
 
     public function isUserNameAvailable($username)
     {
-        $sql = "SELECT id, username, email FROM `user` WHERE username = '" . $username . "'";
+        $sql = "SELECT id, username, email FROM `user` WHERE username = '$username'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
             response_username_not_available();
@@ -112,7 +112,7 @@ class User
             response_invalid_email();
         }
 
-        $sql = "SELECT id, username, email FROM `user` WHERE email = '" . $email . "'";
+        $sql = "SELECT id, username, email FROM `user` WHERE email = '$email'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
             response_email_not_available();
@@ -125,7 +125,7 @@ class User
         if (!validatePhone($phone)) {
             response_invalid_phone_number();
         }
-        $sql = "SELECT id, username, phone FROM `user` WHERE phone = '" . $phone . "'";
+        $sql = "SELECT id, username, phone FROM `user` WHERE phone = '$phone'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
             response_phone_number_not_available();
@@ -172,7 +172,7 @@ class User
             return $phoneResponse;
         }
         */
-        //validateDate needs to be defined;
+
         if (!validateDate($dob, 'YYYY-MM-DD')) {
             response_invalid_dateofbirth();
         }
@@ -180,8 +180,7 @@ class User
         $processedPassword = $this->processPassword($password);
 
         $sql = "INSERT INTO user(username, password, name, phone, dob, email)
-                VALUES ('" . $username . "','" . $processedPassword . "','" . $name . "','" . $phone .
-            "','" . $dob . "','" . $email . "')";
+                VALUES ('$username', '$processedPassword', '$name', '$phone', '$dob', '$email')";
         if ($this->Database->query($sql)) {
             return $this->login($email, $password);
         }

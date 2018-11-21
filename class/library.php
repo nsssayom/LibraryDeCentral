@@ -5,7 +5,6 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/response.p
 class library
 {
     private $Database;
-    //a book object is needed to be initiated, I not sure how, and now I understand I don't know how database is being initiated
     private $Book;
 
     public function __construct($DatabaseLink)
@@ -16,10 +15,9 @@ class library
     }
 
     //function prototypes from google doc
-    //-GetId()
-    //-AddBook()
-    //-DeleteBook() //on google docs it was remove book
-    //-RequestBook()
+    //-AddBook()        //done
+    //-DeleteBook()     //done
+    //-RequestBook()    //
     //AcceptRequest()
     //DenyRequest()
     //-RequestDelivery()
@@ -28,35 +26,24 @@ class library
 
 
     public function AddBook($params){
-            $result=$this->Book->setBookInfo($params);
+        $params = $this->Database->escape_recursive($params);
+        $bookID = $this->book->initBook($params['title']);
 
-            return $result;
+        $this->Book->setBookInfo($bookID, $params['authors'], $params['genre'], $params['publisher'], $params['tags'] );
+        $userID = $params['userID'];
+        $sql = "INSERT INTO book_user(book_id, user_id) VALUES ('$bookID', '$userID')";
+        $this->Database->query($sql);
+        response_ok();
     }
     public function DeleteBook($id){
-        //$id will be collected by onclick event, from the loaded result of the user end
-        //it's upto user if he/she finds it by searching or from the list
-        //taking name is not convenient, because one user can have multiple book of same name,
-        //sorry for my ameture commenting :p
-        $result=$this->Book->removeBook($id);
-        //again the code is minimal because Book->removeBook passes the relevant status
-        return $result;
+        $sql = "INSERT INTO book(isDeleted) VALUES(1) WHERE id='$id'";
+        $this->Database->query($sql);
+        response_ok();
     }
 
     public function EditBook($params){
         //work on progress on book.php for it's functions
     }
-
-    //jagged array issue is needed to be fixed
-    //gotokaler ta commit marsi
-    //ajkeo vule ekta commit korsi\
-    //pera nai
-    //signing out
-
-
-    //illuminast signing in
-    //there is no need of edit functions
-    //see, we will not give users let edit an entry other than book name.
-    //to change an author name, remove the previous author, then add a new one. Same goes for genre and tags
 
 }
 

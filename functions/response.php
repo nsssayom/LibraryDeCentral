@@ -127,3 +127,10 @@ function response_wrong_password(){
     echo json_encode(array($data));
     exit();
 }
+
+function response_entity_unavailable(){
+    $data = array();
+    $data['status'] = "259";
+    echo json_encode(array($data));
+    exit();
+}

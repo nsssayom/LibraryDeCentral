@@ -10,9 +10,9 @@ $database->connect();
 
 $user = new User($database);
 
-if (isset($_POST['email'])) {
-    $email = $database->escape($_POST['email']);
-    $result = $user->isEmailAvailable($phone);
+if (isset($_POST['username'])) {
+    $username = $database->escape($_POST['username']);
+    $result = $user->isUserNameAvailable($username);
 } else {
     response_invalid_request();
 }

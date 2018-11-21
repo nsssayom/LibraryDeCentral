@@ -70,4 +70,5 @@ function validateDate($mydate, $format = 'DD-MM-YYYY')
     }
     return false;
 }
+
 ?>

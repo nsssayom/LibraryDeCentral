@@ -16,28 +16,25 @@ class book
     public function loadBookInfo($id)
     {
 
-        if (empty($id)) return false; //or does it need status code?
+        if (empty($id)) response_invalid_request(); //or does it need status code?
 
         $id = $this->Database->escape($id);
 
         $sql = "SELECT * FROM book WHERE id='$id'";
         $result = $this->Database->getArray($sql);
 
-        if (!mysqli_num_row($result)) { //if mysqli_num_row not zero
-
-            return json_encode($result);
-
-        } else return; //status code?
+        if (!mysqli_num_row($result)) {
+            return json_encode(array($result));
+        } else response_entity_unavailable();
     }
 
 
-    public function setBookInfo($title, $authors, $genre = null, $publisher = null, $tags = null)
+    public function setBookInfo($bookID, $authors, $genre = null, $publisher = null, $tags = null)
     {
-        $bookID = $this->initBook($title);
-
         //insert author
         foreach ($authors as $author) {
-            $this->setAuthor($bookID, $this->getAuthor($author), $author['type']);
+            //author is an associative array with 2 keys: name and type
+            $this->setAuthor($bookID, $this->getAuthor($author['name']), $author['type']);
         }
 
         //insert genre
@@ -80,6 +77,10 @@ class book
         $bookId = $this->Database->escape($bookId);
         $sql = "SELECT * FROM book WHERE id = '$bookId'";
         $this->Database->getArray($sql);
+
+        if (isset($result[0])) {
+            return false;
+        }
         return true;
     }
 
@@ -111,13 +112,11 @@ class book
     }
 
     //for relation table
-
     private function setAuthor($bookID, $authorID, $authorType = 0)
     {
-        $sql = "INSERT INTO author_book(book_id, author_id, author_type) VALUES = '$bookID', '$authorID', '$authorType'";
+        $sql = "INSERT INTO author_book(book_id, author_id, author_type) VALUES ('$bookID', '$authorID', '$authorType')";
         $this->Database->query($sql);
         response_ok();
-
     }
 
     private function getGenre($string)
@@ -138,7 +137,7 @@ class book
 
     private function setGenre($bookID, $genreID)
     {
-        $sql = "INSERT INTO book_genre(book_id, genre_id) VALUES = '$bookID', '$genreID'";
+        $sql = "INSERT INTO book_genre(book_id, genre_id) VALUES ('$bookID', '$genreID')";
         $this->Database->query($sql);
         response_ok();
     }
@@ -146,15 +145,8 @@ class book
     //eki jinish vai, koira falao...
     //get author name, and return id upon availability, or create new entry
 
-    public function removeBook($id)
-    {
-        $sql = "INSERT INTO book(isDeleted) VALUES(1) WHERE id='$id'";
-        $this->Database->query($sql);
-        return response_ok();
-    }
 
     //works on author_book relationship table
-
     public function removeAuthor($bookID, $authorID)
     {
         $sql = "INSERT INTO author_book(isDeleted) VALUES(1) WHERE book_id='$bookID' AND author_id='$authorID'";
@@ -203,7 +195,7 @@ class book
 
     private function setPublisher($bookID, $publisherID)
     {
-        $sql = "INSERT INTO book_publisher(book_id, publisher_id) VALUES = '$bookID', '$publisherID'";
+        $sql = "INSERT INTO book_publisher(book_id, publisher_id) VALUES ('$bookID', '$publisherID')";
         $this->Database->query($sql);
         return response_ok();
     }
