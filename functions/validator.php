@@ -33,7 +33,7 @@ function isJson($string)
     return false;
 }
 
-function ($mydate, $format = 'DD-MM-YYYY')
+function validateDate($mydate, $format = 'DD-MM-YYYY')
 {
     if ($format == 'YYYY-MM-DD') {
         list($year, $month, $day) = explode('-', $mydate);

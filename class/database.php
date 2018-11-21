@@ -1,4 +1,6 @@
 <?php
+include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/response.php');
+
   class Database{
     protected $link;
     protected $hostname;
@@ -31,7 +33,8 @@
 
     function query($sql){
       /* Returns MySQL Query */
-      $result = $this->link->query($sql) or $result = false;
+      //for handling database error
+      $result = $this->link->query($sql) or response_database_error();          // $result = false;
       return $result;
     }
 
@@ -43,7 +46,9 @@
     function getArray($sql){
       $mq = $this->query($sql);
       if (!$mq){
-        return false;
+        //for handling database error
+        response_database_error();
+        //return false;
       }
 
       $result = array();
