@@ -10,7 +10,7 @@ $database->connect();
 
 $user = new User($database);
 
-if (isset($_POST['phone'])) {
+if (isset($_POST['phone']) && !empty($_POST['phone'])) {
     $phone = $database->escape($_POST['phone']);
     $result = $user->isPhoneAvailable($phone);
 } else {

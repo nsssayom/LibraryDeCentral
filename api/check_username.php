@@ -10,9 +10,10 @@ $database->connect();
 
 $user = new User($database);
 
-if (isset($_POST['username'])) {
+if (isset($_POST['username']) && !empty($_POST['username']) ) {
     $username = $database->escape($_POST['username']);
     $result = $user->isUserNameAvailable($username);
+    if($result) response_ok();
 } else {
     response_invalid_request();
 }

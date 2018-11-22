@@ -18,7 +18,17 @@ function validateName($userName)
 
 function validatePhone($phone)
 {
-    if (!empty($phone) && preg_match("/^[+][1-9][0-9]{3,14}$/", $phone)) {
+    if (!empty($phone) && !preg_match("/^[+][1-9][0-9]{3,14}$/", $phone)) {
+        return true;
+    }
+    return false;
+}
+
+function validateSex($sex){
+    //0 prefer not to say
+    //1 male
+    //2 female
+    if(!empty($sex) && ($sex==0 || $sex==1 || $sex==2)){
         return true;
     }
     return false;

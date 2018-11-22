@@ -27,7 +27,7 @@ class User
             if (password_verify($password, $user['password'])) {
                 //password matched. Creating Token
                 $tokenReturn = $this->createToken($user['id']);
-                if ($tokenReturn === false) {
+                if (!$tokenReturn) {
                     //Token Creation failed
                      response_token_creation_failed();
                 }
@@ -52,8 +52,15 @@ class User
         $token_seed = $userID . "#Heil_Hitler#" . $creationTime . "&Fuhrer_is_Great&";
         $token = hash('sha256', $token_seed);
 
+
+        $sql = "SELECT * FROM login_token WHERE token = '$token')";
+        $result = $this->Database->getArray($sql);
+        if (!isset($result[0])){
+            createToken($userID);
+        }
+
         $sql = "INSERT INTO login_token (token, uid, creationTime, expiryTime) VALUES ('$token','$userID','$creationTime','$expiryTime')";
-        if ($this->Database->query($sql) !== false) {
+        if ($this->Database->query($sql)) {
             return $token;
         } else {
             return false;
@@ -97,10 +104,19 @@ class User
 
     public function isUserNameAvailable($username)
     {
-        $sql = "SELECT id, username, email FROM `user` WHERE username = '$username'";
+        //$sql = "SELECT id, username, email FROM `user` WHERE username = '$username'";
+        //testing with bujayer
+        $sql = "SELECT id FROM `user` WHERE username = '$username'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
             response_username_not_available();
+        }
+        return true;
+    }
+
+    public function isSexAvailable($sex){
+        if(!validateSex($sex)) {
+            response_invalid_request();
         }
         return true;
     }
@@ -122,45 +138,30 @@ class User
 
     public function isPhoneAvailable($phone)
     {
+
         if (!validatePhone($phone)) {
             response_invalid_phone_number();
         }
+
         $sql = "SELECT id, username, phone FROM `user` WHERE phone = '$phone'";
         $result = $this->Database->getArray($sql);
         if (isset($result[0])) {
             response_phone_number_not_available();
         }
+
         return true;
     }
 
     //public function register($username, $password, $name, $phone, $email, $dob)
-    public function register($username, $password, $code, $email, $name, $dob)
+    public function register($username, $password, $code, $email, $name, $dob,$sex)
     {
         //remove the following line
         $phone = $code;
 
-        $username_availability = $this->isUserNameAvailable($username);
-        $email_availability = $this->isEmailAvailable($email);
-        $phone_availability = $this->isPhoneAvailable($phone);
-
-        if (isJson($username_availability) || isJson($email_availability) || isJson($phone_availability)) {
-            $error = array();
-            $response = null;
-            if (isJson($username_availability)) {
-                $error = array_merge($error, json_decode($username_availability, true));
-            }
-            if (isJson($email_availability)) {
-                $error = array_merge($error, json_decode($email_availability, true));
-            }
-            if (isJson($phone_availability)) {
-                $error = array_merge($error, json_decode($phone_availability, true));
-            }
-            $response = json_encode($error);
-            //print_r($response);
-            //print_r(json_decode($response));
-            return $response;
-        }
-
+        $this->isUserNameAvailable($username);
+        $this->isEmailAvailable($email);
+        $this->isPhoneAvailable($phone);
+        $this->isSexAvailable($sex);
 
         //this handels the verification using account kit
         /*
@@ -179,10 +180,11 @@ class User
 
         $processedPassword = $this->processPassword($password);
 
-        $sql = "INSERT INTO user(username, password, name, phone, dob, email)
-                VALUES ('$username', '$processedPassword', '$name', '$phone', '$dob', '$email')";
+        $sql = "INSERT INTO user(username, password, name, phone, dob, email,sex)
+                VALUES ('$username', '$processedPassword', '$name', '$phone', '$dob', '$email','$sex')";
+
         if ($this->Database->query($sql)) {
-            return $this->login($email, $password);
+            $this->login($email, $password);
         }
     }
 }

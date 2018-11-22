@@ -26,7 +26,7 @@ function response_token($token){
     $data = array();
     $data ['status'] = "100";
     $data ['token'] = $token;
-    return json_encode(array($data));
+    echo json_encode(array($data));
     exit();
 }
 

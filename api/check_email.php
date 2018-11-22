@@ -10,10 +10,12 @@ $database->connect();
 
 $user = new User($database);
 
-if (isset($_POST['email'])) {
+if (isset($_POST['email']) && !empty($_POST['email'])) {
     $email = $database->escape($_POST['email']);
-    $result = $user->isEmailAvailable($phone);
-} else {
+    $result = $user->isEmailAvailable($email);
+    response_ok();
+}
+ else {
     response_invalid_request();
 }
 
