@@ -46,3 +46,5 @@ if (isset($_POST['token']) && !empty($_POST['token']) &&
 } else {
     response_invalid_request();
 }
+
+?>

@@ -82,6 +82,53 @@ class Book
         return true;
     }
 
+    private function authorExists($authorId)
+    {
+        $bookId = $this->Database->escape($authorId);
+        $sql = "SELECT * FROM author WHERE id = '$authorId'";
+        $this->Database->getArray($sql);
+
+        if (isset($result[0])) {
+            return false;
+        }
+        return true;
+    }
+
+    private function genreExists($genreId)
+    {
+        $bookId = $this->Database->escape($genreId);
+        $sql = "SELECT * FROM genre WHERE id = '$genreId'";
+        $this->Database->getArray($sql);
+
+        if (isset($result[0])) {
+            return false;
+        }
+        return true;
+    }
+    private function tagExists($tagId)
+    {
+        $bookId = $this->Database->escape($tagId);
+        $sql = "SELECT * FROM tag WHERE id = '$tagId'";
+        $this->Database->getArray($sql);
+
+        if (isset($result[0])) {
+            return false;
+        }
+        return true;
+    }
+
+    private function publisherExists($publisherId)
+    {
+        $bookId = $this->Database->escape($publisherId);
+        $sql = "SELECT * FROM publisher WHERE id = '$publisherId'";
+        $this->Database->getArray($sql);
+
+        if (isset($result[0])) {
+            return false;
+        }
+        return true;
+    }
+
     //function for getting the id for setBookInfo()
     public function initBook($name)
     {
@@ -92,7 +139,7 @@ class Book
         return $result['id'];
     }
 
-    private function getAuthor($string)
+    public function getAuthor($string)
     {
         $sql = "SELECT id FROM author WHERE name='$string'";
         $result = $this->Database->getArray($sql);
@@ -110,7 +157,7 @@ class Book
     }
 
     //for relation table
-    private function setAuthor($bookID, $authorID, $authorType = 0)
+    public function setAuthor($bookID, $authorID, $authorType = 0)
     {
         $sql = "INSERT INTO author_book(book_id, author_id, author_type) VALUES ('$bookID', '$authorID', '$authorType')";
         $this->Database->query($sql);
@@ -147,32 +194,52 @@ class Book
     //works on author_book relationship table
     public function removeAuthor($bookID, $authorID)
     {
-        $sql = "INSERT INTO author_book(isDeleted) VALUES(1) WHERE book_id='$bookID' AND author_id='$authorID'";
-        $this->Database->query($sql);
-        return response_ok();
+        if ($this->bookExists($bookID) && $this->authorExists($authorID)){
+            $sql = "INSERT INTO author_book(isDeleted) VALUES(1) WHERE book_id='$bookID' AND author_id='$authorID'";
+            $this->Database->query($sql);
+            return response_ok();
+        }
+        else{
+            response_entity_unavailable();
+        }
     }
 
     public function removeGenre($bookID, $genreID)
     {
-        $sql = "INSERT INTO book_genre(isDeleted) VALUES(1) WHERE book_id='$bookID' AND genre_id='$genreID'";
-        $this->Database->query($sql);
-        return response_ok();
+        if ($this->bookExists($bookID) && $this->genreExists($genreID)) {
+            $sql = "INSERT INTO book_genre(isDeleted) VALUES(1) WHERE book_id='$bookID' AND genre_id='$genreID'";
+            $this->Database->query($sql);
+            return response_ok();
+        }
+        else{
+            response_entity_unavailable();
+        }
     }
 
     public function removePublisher($bookID, $publisherID)
     {
-        $sql = "INSERT INTO book_publisher(isDeleted) VALUES(1) WHERE book_id='$bookID' AND publisher_id='$publisherID'";
-        $this->Database->query($sql);
-        return response_ok();
+        if (bookExists($bookID) && $this->publisherExists($publisherID)) {
+            $sql = "INSERT INTO book_publisher(isDeleted) VALUES(1) WHERE book_id='$bookID' AND publisher_id='$publisherID'";
+            $this->Database->query($sql);
+            return response_ok();
+        }
+        else{
+            response_entity_unavailable();
+        }
     }
 
     //mobin zaman signing in
 
     public function removeTag($bookID, $tagID)
     {
-        $sql = "INSERT INTO book_tag(isDeleted) VALUES(1) WHERE book_id='$bookID' AND tag_id='$tagID'";
-        $this->Database->query($sql);
-        return response_ok();
+        if (bookExists($bookID) && $this->tagExists($tagID)) {
+            $sql = "INSERT INTO book_tag(isDeleted) VALUES(1) WHERE book_id='$bookID' AND tag_id='$tagID'";
+            $this->Database->query($sql);
+            return response_ok();
+        }
+        else{
+            response_entity_unavailable();
+        }
     }
 
     private function getPublisher($string)

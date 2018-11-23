@@ -39,3 +39,4 @@ if (isset($_POST['username']) &&
         $sex
     );
 }
+?>

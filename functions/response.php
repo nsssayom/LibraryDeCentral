@@ -134,3 +134,10 @@ function response_entity_unavailable(){
     echo json_encode(array($data));
     exit();
 }
+
+function response_permission_invalid(){
+    $data = array();
+    $data['status'] = "260";
+    echo json_encode(array($data));
+    exit();
+}

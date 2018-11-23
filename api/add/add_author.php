@@ -11,7 +11,7 @@ $user = new User($database);
 $book = new Book($database);
 
 if (isset($_POST['token']) && !empty($_POST['token']) &&
-    isset($_POST['bookId']) && isset($_POST['newTitle'])) {
+    isset($_POST['bookId']) && isset($_POST['author'])) {
 
     $userID = $user->verifyToken($_POST['token']);
 
@@ -20,12 +20,11 @@ if (isset($_POST['token']) && !empty($_POST['token']) &&
     $result = $database->getArray($sql);
 
     if ($result['user_id'] == $userID){
-        $book->editBookTitle($_POST['bookId'], $_POST['newTitle']);
+        $book->removeAuthor($_POST['bookId'], $_POST['authorId']);
     }
     else{
         response_permission_invalid();
     }
-
 
 } else {
     response_invalid_request();
