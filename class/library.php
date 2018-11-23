@@ -47,7 +47,7 @@ class Library
 
     public function requestBook($bookID,$borrowerID){
         $bookID=$this->Database->escape($bookID);
-        $userID=$this->Database->escape($borrowerID);
+        $borrowerID=$this->Database->escape($borrowerID);
 
         $sql="INSERT into issue (book_id,borrower_id,is_requested) VALUES ($bookID,$borrowerID,1)";
         $this->Database->query($sql);
@@ -69,15 +69,24 @@ class Library
         response_ok();
     }
 
-    public function cancelRequest($userID,$requestID){
+
+    public function confirmDelivery($requestID){
+        $requestID=$this->Database->escape($requestID);
+        $sql="UPDATE issue SET is_deliverd=0, delivery_time=CURRENT_TIMESTAMP WHERE id='$requestID'";
+        $this->Database->query($sql);
+        response_ok();
+    }
+
+    public function cancelDelivery($userID,$requestID){
         $requestID=$this->Database->escape($requestID);
         $userID=$this->Database->escape($userID);
         $sql="UPDATE issue SET cancel_delivery=1, cancel_time=CURRENT_TIMESTAMP , cancel_by='$userID' WHERE id='$requestID'";
         $this->Database->query($sql);
         response_ok();
     }
-    //delivery will start from here
-    //sofistication signing out
+
+
+
 
 }
 
