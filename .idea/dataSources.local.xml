@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal">
-    <data-source name="network@localhost" uuid="d3399109-9c0b-4f53-86fa-09b4c5462890">
+    <data-source name="jdbc:mysql://http://27.147.181.30/:3306/network" uuid="08bfa8de-7c76-41be-93a0-07da55a848a9">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" family="MYSQL" exact-version="0.0" />
+      <secret-storage>master_key</secret-storage>
+      <first-sync>true</first-sync>
+      <user-name>phpmyadmin</user-name>
+    </data-source>
+    <data-source name="http://27.147.181.30/" uuid="b6ce78d5-5c46-4b07-a054-19883e6a9346">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" family="MYSQL" exact-version="0.0" />
+      <secret-storage>master_key</secret-storage>
+      <first-sync>true</first-sync>
+      <user-name>phpmyadmin</user-name>
+      <introspection-schemas>*:</introspection-schemas>
     </data-source>
   </component>
 </project>
