@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="53a4a012-94b3-47d2-8a95-b2fed7823782" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/api/add_book.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/edit_book_title.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/arraytest.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/class/book.php" beforeDir="false" afterPath="$PROJECT_DIR$/class/book.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/class/library.php" beforeDir="false" afterPath="$PROJECT_DIR$/class/library.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/class/user.php" beforeDir="false" afterPath="$PROJECT_DIR$/class/user.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/json_test.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ping.html" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -50,8 +42,8 @@
             <file pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/class/book.php">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="-1140">
-                    <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+                  <state relative-caret-position="342">
+                    <caret line="105" column="45" lean-forward="true" selection-start-line="105" selection-start-column="45" selection-end-line="105" selection-end-column="45" />
                   </state>
                 </provider>
               </entry>
@@ -95,7 +87,7 @@
           <entry key="PHP/\book" value="4" />
           <entry key="PHP/\library" value="1" />
           <entry key="error" value="2" />
-          <entry key="gitignore" value="1" />
+          <entry key="gitignore" value="2" />
           <entry key="html" value="15" />
           <entry key="php" value="127" />
           <entry key="sql" value="1" />
@@ -105,7 +97,7 @@
         <counts>
           <entry key="HTML" value="15" />
           <entry key="PHP" value="127" />
-          <entry key="PLAIN_TEXT" value="3" />
+          <entry key="PLAIN_TEXT" value="4" />
           <entry key="Scratch" value="1" />
           <entry key="UML" value="8" />
         </counts>
@@ -113,16 +105,17 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="error" value="45" />
+          <entry key="gitignore" value="20" />
           <entry key="html" value="298" />
           <entry key="php" value="23212" />
-          <entry key="txt" value="215" />
+          <entry key="txt" value="272" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="298" />
           <entry key="PHP" value="23212" />
-          <entry key="PLAIN_TEXT" value="260" />
+          <entry key="PLAIN_TEXT" value="337" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.php.composer.command.options" />
@@ -158,16 +151,25 @@
         <entry file="file://$PROJECT_DIR$/api/add_book.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="727">
-              <caret line="47" column="1" lean-forward="true" selection-start-line="47" selection-start-column="1" selection-end-line="47" selection-end-column="1" />
+              <caret line="47" column="1" selection-start-line="47" selection-start-column="1" selection-end-line="47" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/api/edit_book_title.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="17" column="1" lean-forward="true" selection-start-line="17" selection-start-column="1" selection-end-line="17" selection-end-column="1" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/api/edit_book_title.php">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="17" column="31" lean-forward="true" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
+            <state relative-caret-position="19">
+              <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -265,8 +267,9 @@
         <option value="$PROJECT_DIR$/class/user.php" />
         <option value="$PROJECT_DIR$/json_test.php" />
         <option value="$PROJECT_DIR$/class/book.php" />
-        <option value="$PROJECT_DIR$/api/edit_book_title.php" />
         <option value="$PROJECT_DIR$/api/add_book.php" />
+        <option value="$PROJECT_DIR$/api/edit_book_title.php" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -374,7 +377,7 @@
       <workItem from="1542768669396" duration="602000" />
       <workItem from="1542771639723" duration="22025000" />
       <workItem from="1542859007659" duration="5649000" />
-      <workItem from="1542952993420" duration="5085000" />
+      <workItem from="1542952993420" duration="5430000" />
     </task>
     <task id="LOCAL-00001" summary="Ditching ATOM">
       <created>1542104951053</created>
@@ -439,11 +442,18 @@
       <option name="project" value="LOCAL" />
       <updated>1542863058985</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="API_Edit_book_Title [added]&#10;API_Add_Book [added]">
+      <created>1542961808891</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1542961808891</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="76060000" />
+    <option name="totallyTimeSpent" value="76405000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -494,7 +504,9 @@
     <MESSAGE value="More un-sofistication" />
     <MESSAGE value="Forceful commit" />
     <MESSAGE value="* Methods were cleaned&#10;* API folder was formed&#10;* verification and login APIs added" />
-    <option name="LAST_COMMIT_MESSAGE" value="* Methods were cleaned&#10;* API folder was formed&#10;* verification and login APIs added" />
+    <MESSAGE value="API_Edit_book_Title [added]&#10;API_Add_Book [added]" />
+    <option name="LAST_COMMIT_MESSAGE" value="API_Edit_book_Title [added]&#10;API_Add_Book [added]" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/d3399109-9c0b-4f53-86fa-09b4c5462890/console.sql">
@@ -505,13 +517,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="114">
           <caret line="6" column="6" lean-forward="true" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>
@@ -740,21 +745,28 @@
     <entry file="file://$PROJECT_DIR$/api/add_book.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="727">
-          <caret line="47" column="1" lean-forward="true" selection-start-line="47" selection-start-column="1" selection-end-line="47" selection-end-column="1" />
+          <caret line="47" column="1" selection-start-line="47" selection-start-column="1" selection-end-line="47" selection-end-column="1" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/class/book.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1140">
-          <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+        <state relative-caret-position="342">
+          <caret line="105" column="45" lean-forward="true" selection-start-line="105" selection-start-column="45" selection-end-line="105" selection-end-column="45" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/api/edit_book_title.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
-          <caret line="17" column="31" lean-forward="true" selection-start-line="17" selection-start-column="31" selection-end-line="17" selection-end-column="31" />
+          <caret line="17" column="1" lean-forward="true" selection-start-line="17" selection-start-column="1" selection-end-line="17" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="20" selection-start-line="1" selection-start-column="20" selection-end-line="1" selection-end-column="20" />
         </state>
       </provider>
     </entry>
