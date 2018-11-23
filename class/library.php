@@ -2,7 +2,7 @@
 include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/validator.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/response.php');
 
-class library
+class Library
 {
     private $Database;
     private $Book;

@@ -3,7 +3,7 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/validator.
 include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/functions/response.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/LibraryDeCentral/class/database.php');
 
-class book
+class Book
 {
     private $Database;
 
@@ -11,7 +11,6 @@ class book
     {
         $this->Database = $DatabaseLink;
     }
-
 
     public function loadBookInfo($id)
     {
@@ -27,7 +26,6 @@ class book
             return json_encode(array($result));
         } else response_entity_unavailable();
     }
-
 
     public function setBookInfo($bookID, $authors, $genre = null, $publisher = null, $tags = null)
     {

@@ -91,7 +91,7 @@ class User
             if ($result['expiryTime'] > $now) {
                 //token ok
                 updateToken($token);
-                return true;
+                return $result['id'];
             } else {
                 //token expired
                 response_token_expired();
