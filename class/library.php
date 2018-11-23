@@ -40,10 +40,44 @@ class Library
         $this->Database->query($sql);
         response_ok();
     }
-
+    //sofistication: is EditBook() is necessary?
     public function EditBook($params){
-        //work on progress on book.php for it's functions
     }
+    //sofistication: initiating
+
+    public function requestBook($bookID,$borrowerID){
+        $bookID=$this->Database->escape($bookID);
+        $userID=$this->Database->escape($borrowerID);
+
+        $sql="INSERT into issue (book_id,borrower_id,is_requested) VALUES ($bookID,$borrowerID,1)";
+        $this->Database->query($sql);
+        response_ok();
+    }
+
+
+    public function acceptRequest($requestID){
+        $requestID=$this->Database->escape($requestID);
+        $sql="UPDATE issue SET is_accepted=1, accept_time=CURRENT_TIMESTAMP WHERE id='$requestID'";
+        $this->Database->query($sql);
+        response_ok();
+    }
+
+    public function denyRequest($requestID){
+        $requestID=$this->Database->escape($requestID);
+        $sql="UPDATE issue SET is_denied=1, deny_time=CURRENT_TIMESTAMP WHERE id='$requestID'";
+        $this->Database->query($sql);
+        response_ok();
+    }
+
+    public function cancelRequest($userID,$requestID){
+        $requestID=$this->Database->escape($requestID);
+        $userID=$this->Database->escape($userID);
+        $sql="UPDATE issue SET cancel_delivery=1, cancel_time=CURRENT_TIMESTAMP , cancel_by='$userID' WHERE id='$requestID'";
+        $this->Database->query($sql);
+        response_ok();
+    }
+    //delivery will start from here
+    //sofistication signing out
 
 }
 
