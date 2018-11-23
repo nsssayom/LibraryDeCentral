@@ -91,6 +91,7 @@ class User
             if ($result['expiryTime'] > $now) {
                 //token ok
                 updateToken($token);
+                //is_blocked needs to be checked
                 return $result['id'];
             } else {
                 //token expired
