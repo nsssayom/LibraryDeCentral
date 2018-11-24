@@ -164,7 +164,7 @@ class Book
         response_ok();
     }
 
-    private function getGenre($string)
+    public function getGenre($string)
     {
         $sql = "SELECT id FROM genre WHERE name='$string'";
         $result = $this->Database->getArray($sql);
@@ -180,7 +180,7 @@ class Book
         }
     }
 
-    private function setGenre($bookID, $genreID)
+    public function setGenre($bookID, $genreID)
     {
         $sql = "INSERT INTO book_genre(book_id, genre_id) VALUES ('$bookID', '$genreID')";
         $this->Database->query($sql);
@@ -242,7 +242,7 @@ class Book
         }
     }
 
-    private function getPublisher($string)
+    public function getPublisher($string)
     {
         $sql = "SELECT id FROM publisher WHERE name='$string'";
         $result = $this->Database->getArray($sql);
@@ -258,14 +258,14 @@ class Book
         }
     }
 
-    private function setPublisher($bookID, $publisherID)
+    public function setPublisher($bookID, $publisherID)
     {
         $sql = "INSERT INTO book_publisher(book_id, publisher_id) VALUES ('$bookID', '$publisherID')";
         $this->Database->query($sql);
         return response_ok();
     }
 
-    private function getTag($string)
+    public function getTag($string)
     {
         $sql = "SELECT id FROM tag WHERE name='$string'";
         $result = $this->Database->getArray($sql);
@@ -283,7 +283,7 @@ class Book
         }
     }
 
-    private function setTag($bookID, $tagID)
+    public function setTag($bookID, $tagID)
     {
         $sql = "INSERT INTO book_tag(book_id, tag_id) VALUES = '$bookID', '$tagID'";
         $this->Database->query($sql);

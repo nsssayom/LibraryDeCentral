@@ -8,7 +8,7 @@ $database = init_database();
 $database->connect();
 
 $user = new User($database);
-$book = new Book($database);
+$library = new Library($database);
 
 if (isset($_POST['token']) && !empty($_POST['token']) &&
     isset($_POST['bookId']) && isset($_POST['authorId'])) {
@@ -22,7 +22,7 @@ if (isset($_POST['token']) && !empty($_POST['token']) &&
 
 
     if (($result['user_id'] == $userID) || $result['privilege'] < 4){
-        $book->removeAuthor($_POST['bookId'], $_POST['authorId']);
+        $library->DeleteBook($_POST['bookId'], $_POST['authorId']);
     }
     else{
         response_permission_invalid();

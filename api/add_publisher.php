@@ -11,7 +11,7 @@ $user = new User($database);
 $book = new Book($database);
 
 if (isset($_POST['token']) && !empty($_POST['token']) &&
-    isset($_POST['bookId']) && isset($_POST['tagId'])) {
+    isset($_POST['bookId']) && isset($_POST['publisher'])) {
 
     $userID = $user->verifyToken($_POST['token']);
 
@@ -22,7 +22,7 @@ if (isset($_POST['token']) && !empty($_POST['token']) &&
 
 
     if (($result['user_id'] == $userID) || $result['privilege'] < 4){
-        $book->removeTag($_POST['bookId'], $_POST['tagId']);
+        $book->setPublisher($_POST['bookId'], $book->getPublisher($_POST['publisher']));
     }
     else{
         response_permission_invalid();
