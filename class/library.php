@@ -40,9 +40,7 @@ class Library
         $this->Database->query($sql);
         response_ok();
     }
-    //sofistication: is EditBook() is necessary?
-    public function EditBook($params){
-    }
+
     //sofistication: initiating
 
     public function requestBook($bookID,$borrowerID){
@@ -59,6 +57,7 @@ class Library
         $requestID=$this->Database->escape($requestID);
         $sql="UPDATE issue SET is_accepted=1, accept_time=CURRENT_TIMESTAMP WHERE id='$requestID'";
         $this->Database->query($sql);
+        //generate security code
         response_ok();
     }
 
@@ -74,6 +73,7 @@ class Library
         $requestID=$this->Database->escape($requestID);
         $sql="UPDATE issue SET is_deliverd=0, delivery_time=CURRENT_TIMESTAMP WHERE id='$requestID'";
         $this->Database->query($sql);
+        //Confirm security code
         response_ok();
     }
 

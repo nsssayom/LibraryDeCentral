@@ -81,7 +81,7 @@ class User
 
     public function verifyToken($token)
     {
-        $sql = "SELECT id, expiryTime FROM login_token WHERE token = '$token';";
+        $sql = "SELECT uid, expiryTime FROM login_token WHERE token = '$token';";
         $now = time();
         $result = $this->Database->getArray($sql);
 
@@ -92,7 +92,7 @@ class User
                 //token ok
                 updateToken($token);
                 //is_blocked needs to be checked
-                return $result['id'];
+                return $result['uid'];
             } else {
                 //token expired
                 response_token_expired();
